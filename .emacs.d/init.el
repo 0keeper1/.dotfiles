@@ -11,7 +11,9 @@
       inhibit-startup-screen t
       gc-cons-threshold 100000000
       large-file-warning-threshold 100000000
-      idle-update-delay 2)
+      idle-update-delay 2
+      initial-buffer-choice  nil
+      inhibit-startup-message t)
 ;;; END CORE SETTING
 
 ;;; START MAIN CONFIGS
@@ -22,8 +24,8 @@
   :ensure t
   :config
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (package-initialize)
-  (package-refresh-contents)
+  ; (package-initialize)
+  ; (package-refresh-contents)
 )
 ;; END MELPA
 
@@ -42,9 +44,9 @@
 ;; START AWESOME-TRAY
 (use-package awesome-tray
   :load-path "~/.emacs.d/elpa/awesome-tray/"
-  :ensure t
   :config
-  (awesome-tray-mode))
+  (awesome-tray-mode)
+  (setq awesome-tray-mode-line-active-color "White"))
 ;; END AWESOME-TRAY
 
 ;; START ALL-THE-ICON
@@ -64,7 +66,10 @@
 ;; START TREE-SITTER
 (use-package tree-sitter
   :ensure t
-  :hook (rustic-mode . (global-tree-sitter-mode tree-sitter-hl-mode)))
+  :hook (tree-sitter-after-on-hook . tree-sitter-hl-mode)
+  :config
+  (global-tree-sitter-mode)
+  (tree-sitter-require 'rust))
 
 (use-package tree-sitter-langs
   :ensure t)
@@ -149,6 +154,13 @@
 	company-search-regexp-function 'company-search-words-regexp))
 ;; END COMPANY
 
+;; START COMPANY-BOX
+(use-package company-box
+  :ensure t
+  :after (company)
+  :hook (company-mode . company-box-mode))
+;; END COMPANY-BOX
+
 ;; START COMPANY-QUICKHELP
 (use-package company-quickhelp
   :after (company)
@@ -172,16 +184,16 @@
 ;; END FLYCHECK
 
 ;; START HELM
-(use-package helm
-  :ensure t
-  :config
-  (helm-mode))
+;; (use-package helm
+;;   :ensure t
+;;   :config
+;;   (helm-mode))
 ;; END HELM
 
 ;; START HELM-LSP
-(use-package helm-lsp
-  :after (helm lsp-mode)
-  :ensure t)
+;; (use-package helm-lsp
+;;   :after (helm lsp-mode)
+;;   :ensure t)
 ;; END HELM-LSP
 
 ;; START PROJECTILE
@@ -244,10 +256,12 @@
 	centaur-tabs-set-close-button nil
 	centaur-tabs-label-fixed-length 10
 	centaur-tabs-show-new-tab-button t
-	centaur-tabs-show-count nil)
+	centaur-tabs-show-count nil
+	centaur-tabs-cycle-scope 'tabs)
   :bind
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward))
+  (:map global-map
+	("M-[" . centaur-tabs-backward)
+	("M-]" . centaur-tabs-forward)))
 ;; END CENTUAR-TABS
 
 ;;; END MAIN CONFIGS
@@ -256,10 +270,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("0f76f9e0af168197f4798aba5c5ef18e07c926f4e7676b95f2a13771355ce850" "703a3469ae4d2a83fd5648cac0058d57ca215d0fea7541fb852205e4fae94983" default))
+ '(awesome-tray-mode-line-active-color "#ffffff")
+ '(elcord-editor-icon "emacs_icon")
+ '(elcord-use-major-mode-as-main-icon t)
+ '(inhibit-startup-echo-area-message "")
+ '(inhibit-startup-screen nil)
+ '(initial-buffer-choice "~/")
+ '(initial-scratch-message nil)
  '(package-selected-packages
-   '(rtags zig-mode which-key treemacs-projectile tree-sitter-langs rustic python-mode nasm-mode lsp-ui lsp-treemacs helm-lsp flycheck elcord company arduino-mode)))
+   '(rtags zig-mode which-key treemacs-projectile tree-sitter-langs rustic python-mode nasm-mode lsp-ui lsp-treemacs helm-lsp flycheck elcord company arduino-mode))
+ '(user-emacs-directory-warning nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
