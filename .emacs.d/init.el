@@ -86,6 +86,7 @@
   (c-mode . lsp)
   (C++-mode . lsp)
   (zig-mode . lsp)
+  (arduino-mode . lsp)
 )
 ;; END LSP-MODE
 
